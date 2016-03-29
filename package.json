@@ -1,5 +1,5 @@
 {
-    "name": "DomoMaker-Part-B",
+    "name": "DomoMaker-Part-C",
     "version": "1.0.0",
     "description": "A Simple Login Example using Node.js, Mongo, Redis and PBKDF2",
     "main": "./src/app.js",
