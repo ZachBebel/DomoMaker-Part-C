@@ -32,7 +32,7 @@ var db = mongoose.connect(dbURL, function (err) {
 
 // REDISCLOUD_URL = "redis://rediscloud:password@localhost:6379"
 var redisURL = {
-    hostname: '127.0.0.1',
+    hostname: 'localhost',
     port: 6379
 }
 
