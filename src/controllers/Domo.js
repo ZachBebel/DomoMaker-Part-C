@@ -16,6 +16,7 @@ var makerPage = function (req, res) {
 
         //return success
         res.render('app', {
+            csrfToken: req.csrfToken(),
             domos: docs
         });
 

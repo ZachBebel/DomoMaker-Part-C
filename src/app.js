@@ -10,6 +10,9 @@ var session = require('express-session');
 var RedisStore = require('connect-redis')(session);
 var url = require('url');
 
+// Csurf is a middleware library which automatically generates unique tokens for each user for each page. It then checks for those tokens on requests to prevent forgery from another page.
+var csrf = require('csurf');
+
 //In MVC, you have 'routes' that line up URLs to controller methods
 var router = require('./router.js'); //import our router.js file to handle the MVC routes
 
@@ -78,7 +81,11 @@ app.use(session({
     }),
     secret: 'Domo Arigato',
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true,
+    // send a flag with the session cookie telling the browser to disallow JS access to the cookies
+    cookie: {
+        httpOnly: true
+    }
 }));
 
 //app.set sets one of the express config options
@@ -92,8 +99,19 @@ app.set('views', __dirname + '/views');
 //call favicon with the favicon path and tell the app to use it
 app.use(favicon(__dirname + '/../client/img/favicon.png'));
 
+//disable header to hide server framework
+app.disable('x-powered-by');
+
 //call the cookie parser library and tell express to use it
 app.use(cookieParser());
+
+// before you setup the router, we need to add CSurf (which we called csrf). CSurf will generate a unique token for each request and requests from the same session must match. If they don’t, csurf will create an err called ‘EBADCSRFTOKEN’
+app.use(csrf());
+app.use(function (err, req, res, next) {
+    if (err.code !== 'EBADCSRFTOKEN') return next(err);
+
+    return; // if error, do not process the request
+});
 
 //pass our app to our router object to map the routes
 router(app);
