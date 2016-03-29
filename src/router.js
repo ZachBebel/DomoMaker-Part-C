@@ -1,6 +1,7 @@
 //import the controllers
 //This only specifies the folder name, which means it will automatically pull the index.js file
 var controllers = require('./controllers');
+var mid = require('./middleware');
 
 //function to attach routes
 var router = function (app) { //pass the express app in
@@ -12,14 +13,17 @@ var router = function (app) { //pass the express app in
 
     //when someone goes to the /page1 page, call controllers.page1
     //For example, www.webpage.com/page1, it will route to controllers.page1
-    app.get('/login', controllers.Account.loginPage);
-    app.post('/login', controllers.Account.login);
-    app.get('/signup', controllers.Account.signupPage);
-    app.post('/signup', controllers.Account.signup);
-    app.get('/logout', controllers.Account.logout);
-    app.get('/maker', controllers.Domo.makerPage);
-    app.post('/maker', controllers.Domo.make);
-    app.get('/', controllers.Account.loginPage);
+
+    // The way router level middleware in Express works is you connect as many middleware calls as you want in the order you want the middleware to run. The first parameter is always the URL. The last parameter is always the controller. Everything in between is any of the middleware operations you want to call.
+
+    app.get('/login', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
+    app.post('/login', mid.requiresSecure, mid.requiresLogout, controllers.Account.login);
+    app.get('/signup', mid.requiresSecure, mid.requiresLogout, controllers.Account.signupPage);
+    app.post('/signup', mid.requiresSecure, mid.requiresLogout, controllers.Account.signup);
+    app.get('/logout', mid.requiresLogin, controllers.Account.logout);
+    app.get('/maker', mid.requiresLogin, controllers.Domo.makerPage);
+    app.post('/maker', mid.requiresLogin, controllers.Domo.make);
+    app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
 
 };
 

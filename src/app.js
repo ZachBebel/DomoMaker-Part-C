@@ -16,7 +16,7 @@ var router = require('./router.js'); //import our router.js file to handle the M
 //MONGODB address to connect to.
 //process.env.MONGOLAB_URI is the variable automatically put into your node application by Heroku is you are using mongoLab
 //otherwise fallback to localhost. The string after mongodb://localhost is the database name. It can be anything you want. 
-var dbURL = process.env.MONGOLAB_URI || "mongodb://heroku_52nscjkt:mdkb4sdu52n3qe09qins945978@ds015919.mlab.com:15919/heroku_52nscjkt";
+var dbURL = process.env.MONGOLAB_URI || "mongodb://heroku_f96n00pz:d3tjeem4n75q7q737ngvc89qng@ds047065.mlab.com:47065/heroku_f96n00pz";
 
 //call mongoose's connect function and pass in the url. If there are any errors connecting, we will throw it and kill the server. 
 //Once connected, the mongoose package will stay connected for every file that requires it in this project
@@ -27,6 +27,7 @@ var db = mongoose.connect(dbURL, function (err) {
     }
 });
 
+// REDISCLOUD_URL = "redis://rediscloud:password@localhost:6379"
 var redisURL = {
     hostname: 'localhost',
     port: 6379
