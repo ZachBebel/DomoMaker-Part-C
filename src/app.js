@@ -32,7 +32,7 @@ var db = mongoose.connect(dbURL, function (err) {
 
 // REDISCLOUD_URL = "redis://rediscloud:password@localhost:6379"
 var redisURL = {
-    hostname: 'localhost',
+    hostname: '127.0.0.1',
     port: 6379
 }
 
@@ -41,6 +41,9 @@ var redisPASS;
 if (process.env.REDISCLOUD_URL) {
     redisURL = url.parse(process.env.REDISCLOUD_URL);
     redisPASS = redisURL.auth.split(":")[1];
+} else {
+    //redisURL = url.parse("redis://rediscloud:ytYtucwmSJZbrQN7@pub-redis-15266.us-east-1-3.7.ec2.redislabs.com:15266");
+    //redisPASS = redisURL.auth.split(":")[1];
 }
 
 //Port set by process.env.PORT environment variable.
@@ -108,8 +111,11 @@ app.use(cookieParser());
 // before you setup the router, we need to add CSurf (which we called csrf). CSurf will generate a unique token for each request and requests from the same session must match. If they don’t, csurf will create an err called ‘EBADCSRFTOKEN’
 app.use(csrf());
 app.use(function (err, req, res, next) {
-    if (err.code !== 'EBADCSRFTOKEN') return next(err);
-
+    if (err.code !== 'EBADCSRFTOKEN') {
+        return next(err);
+    } else {
+        console.log("incorrect token");
+    }
     return; // if error, do not process the request
 });
 
